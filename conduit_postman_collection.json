@@ -1,0 +1,3099 @@
+{
+	"info": {
+		"_postman_id": "79fa1d89-c219-4bcc-a3be-7beb65d1935c",
+		"name": "Postman Practice [Daryna Hopanchuk]",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49623158",
+		"_collection_link": "https://www.postman.com/darynahopanchuk-6691817/workspace/postman-practice-daryna-hopanchuk/collection/49623158-79fa1d89-c219-4bcc-a3be-7beb65d1935c?action=share&source=collection_link&creator=49623158"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "1. Successful sign in",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test('Assert JSON contain properties: username, email, token, bio, image', () => {",
+									"  pm.response.to.have.jsonBody('user.username')",
+									"    .and.to.have.jsonBody('user.email')",
+									"    .and.to.have.jsonBody('user.token')",
+									"    .and.to.have.jsonBody('user.bio') ",
+									"    .and.to.have.jsonBody('user.image')",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{tokenConduit}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Sign in with non-existing credential",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus422_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test(\"Validation error message appears\", function () {",
+									"    pm.response.to.have.status(422);",
+									"    const res = pm.response.json();",
+									"",
+									"    pm.expect(res.errors).to.have.property(\"email or password\");",
+									"    pm.expect(res.errors[\"email or password\"]).to.eql(\"is invalid\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"email\": \"qa@123mate.com\",\n    \"password\": \"QA123\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Sign in with empty email",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus422_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test(\"Validation error message appears\", function () {",
+									"    pm.response.to.have.status(422);",
+									"    const res = pm.response.json();",
+									"",
+									"    pm.expect(res.errors).to.have.property(\"email\");",
+									"    pm.expect(res.errors[\"email\"]).to.eql(\"can't be blank\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"email\": \"\",\n    \"password\": \"{{password}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Sign in with empty password",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus422_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test(\"Validation error message appears\", function () {",
+									"    pm.response.to.have.status(422);",
+									"    const res = pm.response.json();",
+									"",
+									"    pm.expect(res.errors).to.have.property(\"password\");",
+									"    pm.expect(res.errors[\"password\"]).to.eql(\"can't be blank\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"email\": \"{{email}}\",\n    \"password\": \"\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5. Successful sign up",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test('Assert JSON contain properties: username, email, token, bio, image', () => {",
+									"  pm.response.to.have.jsonBody('user.username')",
+									"    .and.to.have.jsonBody('user.email')",
+									"    .and.to.have.jsonBody('user.token')",
+									"    .and.to.have.jsonBody('user.bio') ",
+									"    .and.to.have.jsonBody('user.image')",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"username\": \"{{$randomUserName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"{{password}}\"\n  }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6. Sign up with taken username",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus422_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test(\"Validation error message appears\", function () {",
+									"    pm.response.to.have.status(422);",
+									"    const res = pm.response.json();",
+									"",
+									"    pm.expect(res.errors).to.have.property(\"username\");",
+									"    pm.expect(res.errors[\"username\"][0]).to.eql(\"This username is taken.\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"username\": \"{{username}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"{{password}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7. Sign up with taken email",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus422_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test(\"Validation error message appears\", function () {",
+									"    pm.response.to.have.status(422);",
+									"    const res = pm.response.json();",
+									"",
+									"    pm.expect(res.errors).to.have.property(\"email\");",
+									"    pm.expect(res.errors[\"email\"][0]).to.eql(\"This email is taken.\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"username\": \"{{$randomUserName}}\",\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8. Sign up with username starting from number",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus422_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test(\"Validation error message appears\", function () {",
+									"    pm.response.to.have.status(422);",
+									"    const res = pm.response.json();",
+									"",
+									"    pm.expect(res.errors).to.have.property(\"username\");",
+									"    pm.expect(res.errors[\"username\"][0]).to.eql(",
+									"        \"Username must start with a letter, have no spaces, and be 2 - 40 characters.\"",
+									"    );",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"username\": \"8username\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"{{password}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "9. Sign up with username with 41 symbols",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus422_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test(\"Validation error message appears\", function () {",
+									"    pm.response.to.have.status(422);",
+									"    const res = pm.response.json();",
+									"",
+									"    pm.expect(res.errors).to.have.property(\"username\");",
+									"    pm.expect(res.errors[\"username\"][0]).to.eql(",
+									"        \"Username must start with a letter, have no spaces, and be 2 - 40 characters.\"",
+									"    );",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"username\": \"Bxxqpl1znr33ayvkjfhgdoiepr4nwq5lxmvbczqktp\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"{{password}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10. Sign up with username with spaces",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus422_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test(\"Validation error message appears\", function () {",
+									"    pm.response.to.have.status(422);",
+									"    const res = pm.response.json();",
+									"",
+									"    pm.expect(res.errors).to.have.property(\"username\");",
+									"    pm.expect(res.errors[\"username\"][0]).to.eql(",
+									"        \"Username must start with a letter, have no spaces, and be 2 - 40 characters.\"",
+									"    );",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"username\": \"User name\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"{{password}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "11. Sign up with empty username",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus422_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test(\"Validation error message appears\", function () {",
+									"    pm.response.to.have.status(422);",
+									"    const res = pm.response.json();",
+									"",
+									"    pm.expect(res.errors).to.have.property(\"username\");",
+									"    pm.expect(res.errors[\"username\"][0]).to.eql(",
+									"        \"Username must start with a letter, have no spaces, and be 2 - 40 characters.\"",
+									"    );",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"username\": \"\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"{{password}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "12. Sign up with empty email",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus422_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test(\"Validation error message appears\", function () {",
+									"    pm.response.to.have.status(422);",
+									"    const res = pm.response.json();",
+									"",
+									"    pm.expect(res.errors).to.have.property(\"email\");",
+									"    pm.expect(res.errors[\"email\"][0]).to.eql(",
+									"        \"This email does not seem valid.\"",
+									"    );",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"username\": \"{{$randomUserName}}\",\n    \"email\": \"\",\n    \"password\": \"{{password}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "13. Sign up with email without @",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus422_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test(\"Validation error message appears\", function () {",
+									"    pm.response.to.have.status(422);",
+									"    const res = pm.response.json();",
+									"",
+									"    pm.expect(res.errors).to.have.property(\"email\");",
+									"    pm.expect(res.errors[\"email\"][0]).to.eql(",
+									"        \"This email does not seem valid.\"",
+									"    );",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"username\": \"{{$randomUserName}}\",\n    \"email\": \"test.mate.com\",\n    \"password\": \"{{password}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "14. Sign up with email without .",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus422_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test(\"Validation error message appears\", function () {",
+									"    pm.response.to.have.status(422);",
+									"    const res = pm.response.json();",
+									"",
+									"    pm.expect(res.errors).to.have.property(\"email\");",
+									"    pm.expect(res.errors[\"email\"][0]).to.eql(",
+									"        \"This email does not seem valid.\"",
+									"    );",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"username\": \"{{$randomUserName}}\",\n    \"email\": \"test@matecom\",\n    \"password\": \"{{password}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "15. Sign up with email without name part",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus422_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test(\"Validation error message appears\", function () {",
+									"    pm.response.to.have.status(422);",
+									"    const res = pm.response.json();",
+									"",
+									"    pm.expect(res.errors).to.have.property(\"email\");",
+									"    pm.expect(res.errors[\"email\"][0]).to.eql(",
+									"        \"This email does not seem valid.\"",
+									"    );",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"username\": \"{{$randomUserName}}\",\n    \"email\": \"@mate.com\",\n    \"password\": \"{{password}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "16. Sign up with email with more than 254 symbols",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus422_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test(\"Validation error message appears\", function () {",
+									"    pm.response.to.have.status(422);",
+									"    const res = pm.response.json();",
+									"",
+									"    pm.expect(res.errors).to.have.property(\"email\");",
+									"    pm.expect(res.errors[\"email\"][0]).to.eql(",
+									"        \"This email does not seem valid.\"",
+									"    );",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"username\": \"{{$randomUserName}}\",\n    \"email\": \"thisisareallylongemailaddressdesignedtotestmaximumlengthvalidationandshoulddefinitelyexceedtheusualcharacterlimitsbyquitealotsoletsjustkeepaddingrandomlettersandstufftoseehowfarwecangobecausewhynotitsjustfortestingpurposesanyway1234567890abcdefghijklmnopqrstuvw2xyzabcde@verylongdomainnamethatisalsogoingtobereallylongjusttotestthelimitsagainandagainandagain.com\",\n    \"password\": \"{{password}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "17. Sign up with empty password",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus422_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test(\"Validation error message appears\", function () {",
+									"    pm.response.to.have.status(422);",
+									"    const res = pm.response.json();",
+									"    pm.expect(res.errors).to.have.property(\"password\");",
+									"    pm.expect(res.errors.password).to.eql(\"can't be blank\");",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"username\": \"{{$randomUserName}}\",\n    \"email\": \"test@mate.com\",\n    \"password\": \"\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "18. Get info about user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test('Assert JSON contain properties: username, email, token, bio, image', () => {",
+									"  pm.response.to.have.jsonBody('user.username')",
+									"    .and.to.have.jsonBody('user.email')",
+									"    .and.to.have.jsonBody('user.token')",
+									"    .and.to.have.jsonBody('user.bio') ",
+									"    .and.to.have.jsonBody('user.image')",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{tokenConduit}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/user",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "19. Update info about user: image",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test('Assert JSON contain properties: username, email, token, bio, image', () => {",
+									"  pm.response.to.have.jsonBody('user.username')",
+									"    .and.to.have.jsonBody('user.email')",
+									"    .and.to.have.jsonBody('user.token')",
+									"    .and.to.have.jsonBody('user.bio') ",
+									"    .and.to.have.jsonBody('user.image')",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{tokenConduit}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"image\": \"{{$randomImageUrl}}\",\n    \"username\": \"{{username}}\",\n    \"bio\": \"null\",\n    \"email\": \"{{email}}\",\n    \"token\": \"{{tokenConduit}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/user",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "20. Update info about user: bio",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test('Assert JSON contain properties: username, email, token, bio, image', () => {",
+									"  pm.response.to.have.jsonBody('user.username')",
+									"    .and.to.have.jsonBody('user.email')",
+									"    .and.to.have.jsonBody('user.token')",
+									"    .and.to.have.jsonBody('user.bio') ",
+									"    .and.to.have.jsonBody('user.image')",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{tokenConduit}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"image\": \"null\",\n    \"username\": \"{{username}}\",\n    \"bio\": \"{{$randomLoremSentence}}\",\n    \"email\": \"{{email}}\",\n    \"token\": \"{{tokenConduit}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/user",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "21. Update info about user: username",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test('Assert JSON contain properties: username, email, token, bio, image', () => {",
+									"  pm.response.to.have.jsonBody('user.username')",
+									"    .and.to.have.jsonBody('user.email')",
+									"    .and.to.have.jsonBody('user.token')",
+									"    .and.to.have.jsonBody('user.bio') ",
+									"    .and.to.have.jsonBody('user.image')",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{tokenConduit}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"image\": \"null\",\n    \"username\": \"{{$randomUserName}}\",\n    \"bio\": \"null\",\n    \"email\": \"{{email}}\",\n    \"token\": \"{{tokenConduit}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/user",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "22. Update info about user: email",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test('Assert JSON contain properties: username, email, token, bio, image', () => {",
+									"  pm.response.to.have.jsonBody('user.username')",
+									"    .and.to.have.jsonBody('user.email')",
+									"    .and.to.have.jsonBody('user.token')",
+									"    .and.to.have.jsonBody('user.bio') ",
+									"    .and.to.have.jsonBody('user.image')",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{tokenConduit}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"image\": \"null\",\n    \"username\": \"{{username}}\",\n    \"bio\": \"null\",\n    \"email\": \"{{$randomEmail}}\",\n    \"token\": \"{{tokenConduit}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/user",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "23. Update info about user: password",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test('Assert JSON contain properties: username, email, token, bio, image', () => {",
+									"  pm.response.to.have.jsonBody('user.username')",
+									"    .and.to.have.jsonBody('user.email')",
+									"    .and.to.have.jsonBody('user.token')",
+									"    .and.to.have.jsonBody('user.bio') ",
+									"    .and.to.have.jsonBody('user.image')",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{tokenConduit}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"image\": \"null\",\n    \"username\": \"{{username}}\",\n    \"bio\": \"null\",\n    \"email\": \"{{email}}\",\n    \"password\": \"{{$randomPassword}}\",\n    \"token\": \"{{tokenConduit}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/user",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "24. Update info about user without authorization",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"  pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": {\n    \"image\": \"null\",\n    \"username\": \"{{username}}\",\n    \"bio\": \"null\",\n    \"email\": \"{{email}}\",\n    \"password\": \"{{$randomPassword}}\",\n    \"token\": \"{{tokenConduit}}\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/user",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Articles",
+			"item": [
+				{
+					"name": "1. Create an article",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"));",
+									"eval(pm.collectionVariables.get(\"createArticle\"));",
+									"",
+									"registrationRequest(createArticle);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get('deleteArticle'))",
+									"deleteArticleRequest();",
+									"",
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test('Assert response contains Title', function () {",
+									"  const jsonData = pm.response.json();",
+									"  const ARTICLE_TITLE = pm.collectionVariables.get('articleTitleConduit');",
+									"  pm.expect(jsonData.article.title).to.eql(ARTICLE_TITLE);",
+									"});",
+									"",
+									"pm.test('Assert response contains Description', function () {",
+									"  const jsonData = pm.response.json();",
+									"  const ARTICLE_DESCRIPTION  = pm.collectionVariables.get('articleDescriptionConduit');",
+									"  pm.expect(jsonData.article.description).to.eql(ARTICLE_DESCRIPTION);",
+									"});",
+									"",
+									"pm.test('Assert response contains Body', function () {",
+									"  const jsonData = pm.response.json();",
+									"  const ARTICLE_BODY = pm.collectionVariables.get('articleBodyConduit');",
+									"  pm.expect(jsonData.article.body).to.eql(ARTICLE_BODY);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{tokenConduit}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"article\": {\n    \"title\": \"{{articleTitleConduit}}\",\n    \"description\": \"{{articleDescriptionConduit}}\",\n    \"body\": \"{{articleBodyConduit}}\",\n    \"tagList\": []\n  } \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/articles",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"articles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Update an article",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"));",
+									"eval(pm.collectionVariables.get(\"createArticle\"));",
+									"",
+									"registrationRequest(createArticle);",
+									"",
+									"// const ARTICLE_TITLE = pm.variables.replaceIn('{{$randomLoremSentence}}');",
+									"// pm.collectionVariables.set('articleTitleConduit', ARTICLE_TITLE);",
+									"",
+									"// const ARTICLE_DESCRIPTION = pm.variables.replaceIn('{{$randomLoremSentence}}');",
+									"// pm.collectionVariables.set('articleDescriptionConduit', ARTICLE_DESCRIPTION);",
+									"",
+									"const ARTICLE_BODY = pm.variables.replaceIn('{{$randomLoremSentences}}');",
+									"pm.collectionVariables.set('bodyUpdated', ARTICLE_BODY);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get('deleteArticle'))",
+									"deleteArticleRequest();",
+									"",
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test('Assert response contains Body', function () {",
+									"  const jsonData = pm.response.json();",
+									"  const ARTICLE_BODY = pm.collectionVariables.get('articleBodyConduit');",
+									"  pm.expect(jsonData.article.body).to.eql(ARTICLE_BODY);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{tokenConduit}}",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"article\": {\n    \"title\": \"{{articleTitleConduit}}\",\n    \"body\": \"{{bodyUpdated}}\",\n    \"description\": \"{{articleDescriptionConduit}}\",\n    \"tagList\": []\n  } \n}\n\n\n"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/articles/{{slugConduit}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"articles",
+								"{{slugConduit}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Delete an article",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"));",
+									"eval(pm.collectionVariables.get(\"createArticle\"));",
+									"",
+									"registrationRequest(createArticle);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"  pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{tokenConduit}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}articles/{{slugConduit}}",
+							"host": [
+								"{{BASE_URL}}articles"
+							],
+							"path": [
+								"{{slugConduit}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Get an article",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"));",
+									"eval(pm.collectionVariables.get(\"createArticle\"));",
+									"",
+									"registrationRequest(createArticle);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get('deleteArticle'))",
+									"deleteArticleRequest();",
+									"",
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test('Assert response contains Title', function () {",
+									"  const jsonData = pm.response.json();",
+									"  const ARTICLE_TITLE = pm.collectionVariables.get('articleTitleConduit');",
+									"  pm.expect(jsonData.article.title).to.eql(ARTICLE_TITLE);",
+									"});",
+									"",
+									"pm.test('Assert response contains Description', function () {",
+									"  const jsonData = pm.response.json();",
+									"  const ARTICLE_DESCRIPTION  = pm.collectionVariables.get('articleDescriptionConduit');",
+									"  pm.expect(jsonData.article.description).to.eql(ARTICLE_DESCRIPTION);",
+									"});",
+									"",
+									"pm.test('Assert response contains Body', function () {",
+									"  const jsonData = pm.response.json();",
+									"  const ARTICLE_BODY = pm.collectionVariables.get('articleBodyConduit');",
+									"  pm.expect(jsonData.article.body).to.eql(ARTICLE_BODY);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/articles/{{slugConduit}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"articles",
+								"{{slugConduit}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5. Get articles",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"));",
+									"eval(pm.collectionVariables.get(\"createArticle\"));",
+									"",
+									"registrationRequest(createArticle);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get('deleteArticle'))",
+									"deleteArticleRequest();",
+									"",
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/articles",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"articles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6. Get articles from Your feed",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"));"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{tokenConduit}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/articles/feed?limit=10&offset=0",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"articles",
+								"feed"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7. Get articles from Global feed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/articles?limit=10&offset=0",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"articles"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8. Get articles by tag",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"));",
+									"eval(pm.collectionVariables.get(\"createArticle\"));",
+									"",
+									"registrationRequest(createArticle);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get('deleteArticle'))",
+									"deleteArticleRequest();",
+									"",
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/articles?limit=10&tag={{articleTagsConduit}}&offset=0",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"articles"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "tag",
+									"value": "{{articleTagsConduit}}"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "11. Delete an article of another user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get('createNewUser'))",
+									"eval(pm.collectionVariables.get('createArticle'))",
+									"eval(pm.collectionVariables.get('deleteArticle'))",
+									"",
+									"registrationRequest(createArticle);",
+									"registrationRequest(deleteArticleRequest);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"  pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{tokenConduit}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/articles/{{slugConduit}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"articles",
+								"{{slugConduit}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "9. Create an article without authorization",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"));",
+									"eval(pm.collectionVariables.get(\"createArticle\"));",
+									"",
+									"registrationRequest(createArticle);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"  pm.response.to.have.status(403);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"article\": {\n    \"title\": \"{{articleTitleConduit}}\",\n    \"description\": \"{{articleDescriptionConduit}}\",\n    \"body\": \"{{articleBodyConduit}}\",\n    \"tagList\": []\n  } \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/articles",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"articles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10. Delete an article without authorization",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"));",
+									"eval(pm.collectionVariables.get(\"createArticle\"));",
+									"",
+									"registrationRequest(createArticle);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"  pm.response.to.have.status(401);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}articles/{{slugConduit}}",
+							"host": [
+								"{{BASE_URL}}articles"
+							],
+							"path": [
+								"{{slugConduit}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "12. Delete non-existing article",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"));",
+									"eval(pm.collectionVariables.get(\"createArticle\"));",
+									"",
+									"registrationRequest(createArticle);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"  pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{tokenConduit}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}articles/sint-est",
+							"host": [
+								"{{BASE_URL}}articles"
+							],
+							"path": [
+								"sint-est"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "1. Get info about profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test('Profile contains username, bio, image, following', () => {",
+									"  pm.expect(pm.response.json()).to.have.property('profile');",
+									"  pm.expect(pm.response.json().profile).to.have.property('username');",
+									"  pm.expect(pm.response.json().profile).to.have.property('bio');",
+									"  pm.expect(pm.response.json().profile).to.have.property('image');",
+									"  pm.expect(pm.response.json().profile).to.have.property('following');",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/profiles/{{username}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"profiles",
+								"{{username}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Follow the user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test('Profile contains username, bio, image, following', () => {",
+									"  pm.expect(pm.response.json()).to.have.property('profile');",
+									"  pm.expect(pm.response.json().profile).to.have.property('username');",
+									"  pm.expect(pm.response.json().profile).to.have.property('bio');",
+									"  pm.expect(pm.response.json().profile).to.have.property('image');",
+									"  pm.expect(pm.response.json().profile).to.have.property('following');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{tokenConduit}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/profiles/{{username}}/follow",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"profiles",
+								"{{username}}",
+								"follow"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Unfollow the user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();",
+									"",
+									"pm.test('Profile contains username, bio, image, following', () => {",
+									"  pm.expect(pm.response.json()).to.have.property('profile');",
+									"  pm.expect(pm.response.json().profile).to.have.property('username');",
+									"  pm.expect(pm.response.json().profile).to.have.property('bio');",
+									"  pm.expect(pm.response.json().profile).to.have.property('image');",
+									"  pm.expect(pm.response.json().profile).to.have.property('following');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{tokenConduit}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/profiles/{{username}}/follow",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"profiles",
+								"{{username}}",
+								"follow"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tags",
+			"item": [
+				{
+					"name": "1. Get tags",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/tags",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"tags"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "1. Get comments",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"))",
+									"registrationRequest();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/articles/{{slugConduit}}/comments",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"articles",
+								"{{slugConduit}}",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Post a comment",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"));",
+									"eval(pm.collectionVariables.get(\"createArticle\"));",
+									"",
+									"registrationRequest(createArticle);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get('deleteArticle'))",
+									"deleteArticleRequest();",
+									"",
+									"const statusCodeAndResponseTime = pm.collectionVariables.get('assertStatus200_responseTime');",
+									"eval(statusCodeAndResponseTime)();"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{tokenConduit}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"comment\": {\n        \"body\": \"HDD\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/articles/{{slugConduit}}/comments",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"articles",
+								"{{slugConduit}}",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Delete a comment",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"));",
+									"eval(pm.collectionVariables.get(\"createArticle\"));",
+									"eval(pm.collectionVariables.get(\"createComment\"));",
+									"",
+									"registrationRequest(() => {",
+									"    createArticle();",
+									"    createCommentRequest();",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"  pm.response.to.have.status(204);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{tokenConduit}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/articles/{{slugConduit}}/comments/{{id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"articles",
+								"{{slugConduit}}",
+								"comments",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Delete a comment of another user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"));",
+									"eval(pm.collectionVariables.get(\"createArticle\"));",
+									"eval(pm.collectionVariables.get(\"createComment\"));",
+									"",
+									"registrationRequest();",
+									"createArticle();",
+									"createCommentRequest();",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"  pm.response.to.have.status(403);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{tokenConduit}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/articles/{{slugConduit}}/comments/{{id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"articles",
+								"{{slugConduit}}",
+								"comments",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5. Delete a comment without authorization",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(pm.collectionVariables.get(\"createNewUser\"));",
+									"eval(pm.collectionVariables.get(\"createArticle\"));",
+									"eval(pm.collectionVariables.get(\"createComment\"));",
+									"",
+									"registrationRequest(() => {",
+									"    createArticle();",
+									"    createCommentRequest();",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"  pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/articles/{{slugConduit}}/comments/{{id}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"articles",
+								"{{slugConduit}}",
+								"comments",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					"// This function will help us to save our code as as string further.",
+					"function functionToString(helper) {",
+					"  return helper.toString();",
+					"}",
+					"",
+					"const status200_responseTime = () => {",
+					"  pm.test('Assert status code is 200', () => {",
+					"    pm.response.to.have.status(200);",
+					"  });",
+					"",
+					"  pm.test('Assert response time is less than 1000ms', () => {",
+					"    pm.expect(pm.response.responseTime)",
+					"      .to.be.below(1000);",
+					"  });",
+					"};",
+					"",
+					"const helper200 = functionToString(status200_responseTime);",
+					"pm.collectionVariables.set('assertStatus200_responseTime', helper200);",
+					"",
+					"",
+					"const status422_responseTime = () => {",
+					"  pm.test('Assert status code is 422', () => {",
+					"    pm.response.to.have.status(422);",
+					"  });",
+					"",
+					"  pm.test('Assert response time is less than 1000ms', () => {",
+					"    pm.expect(pm.response.responseTime)",
+					"      .to.be.below(1000);",
+					"  });",
+					"};",
+					"",
+					"const helper422 = functionToString(status422_responseTime);",
+					"pm.collectionVariables.set('assertStatus422_responseTime', helper422);",
+					"",
+					"",
+					"// ====== CREATE USER HELPER ======",
+					"function registrationRequest(callback) {",
+					"  const BASE_URL = pm.collectionVariables.get('BASE_URL');",
+					"  const url = BASE_URL + 'users';",
+					"  // Генеруємо дані",
+					"  const username = pm.variables.replaceIn('{{$randomFirstName}}').toLowerCase();",
+					"  const email = pm.variables.replaceIn('{{$randomEmail}}').toLowerCase();",
+					"  const password = pm.collectionVariables.get('passwordConduit');",
+					"  const requestStructure = {",
+					"    url,",
+					"    method: 'POST',",
+					"    header: {",
+					"      'Content-Type': 'application/json',",
+					"    },",
+					"    body: {",
+					"      mode: 'raw',",
+					"      raw: JSON.stringify({",
+					"        user: { username, email, password }",
+					"      })",
+					"    }",
+					"  };",
+					"  pm.sendRequest(requestStructure, (error, response) => {",
+					"    if (response && response.json().user) {",
+					"      const user = response.json().user;",
+					"      // ЗБЕРІГАЄМО ВСЕ ",
+					"      pm.collectionVariables.set('username', username);",
+					"      pm.collectionVariables.set('email', email);",
+					"      pm.collectionVariables.set('password', password);",
+					"      pm.collectionVariables.set('tokenConduit', user.token);",
+					"      console.log(\"Created user:\", user);",
+					"      if (callback) {",
+					"        callback()",
+					"      }",
+					"    } else {",
+					"      console.log(\"User creation failed:\", error);",
+					"    }",
+					"  });",
+					"}",
+					"// Зберігаємо функцію в змінну колекції",
+					"pm.collectionVariables.set(\"createNewUser\", registrationRequest.toString());",
+					"",
+					"function createArticle() {",
+					"  const BASE_URL = pm.collectionVariables.get('BASE_URL');",
+					"  const url = BASE_URL + '/articles'",
+					"  const title = pm.variables.replaceIn('{{$randomLoremSentence}}')",
+					"  const description = pm.variables.replaceIn('{{$randomLoremSentence}}');",
+					"  const body = pm.variables.replaceIn('{{$randomLoremSentences}}');",
+					"  const tagList = ['talent'];",
+					"  console.log(tagList)",
+					"  const token = pm.collectionVariables.get('tokenConduit')",
+					"",
+					"  const requestStructure = {",
+					"    url,",
+					"    method: 'POST',",
+					"    header: {",
+					"      'Content-Type': 'application/json',",
+					"      'Authorization': `Token ${token}`,",
+					"    },",
+					"    body: {",
+					"      mode: 'raw',",
+					"      raw: JSON.stringify({",
+					"        article: { title, description, body, tagList }",
+					"      })",
+					"    }",
+					"  };",
+					"  pm.sendRequest(requestStructure, (error, response) => {",
+					"    if (response && response.json().article) {",
+					"      const article = response.json().article;",
+					"      pm.collectionVariables.set('slugConduit', article.slug)",
+					"      pm.collectionVariables.set('articleTitleConduit', article.title)",
+					"      pm.collectionVariables.set('articleBodyConduit', article.body)",
+					"      pm.collectionVariables.set('articleDescriptionConduit', article.description)",
+					"      pm.collectionVariables.set('articleTagsConduit', article.tagList)",
+					"      console.log('Created article:', article)",
+					"",
+					"    }",
+					"    else {",
+					"      console.log('Article creation failed:', error)",
+					"    }",
+					"  })",
+					"",
+					"}",
+					"",
+					"pm.collectionVariables.set(\"createArticle\", createArticle.toString())",
+					"",
+					"function deleteArticleRequest() {",
+					"  const BASE_URL = pm.collectionVariables.get('BASE_URL');",
+					"  const SLUG = pm.collectionVariables.get('slugConduit');",
+					"  const url = `${BASE_URL}articles/${SLUG}`;",
+					"  const token = pm.collectionVariables.get('tokenConduit');;",
+					"",
+					"  const requestStructure = {",
+					"    url, //",
+					"    method: 'DELETE',",
+					"    header: {",
+					"      'Content-Type': 'application/json',",
+					"      'Authorization': 'Token ' + token,",
+					"    },",
+					"    body: {}",
+					"  };",
+					"",
+					"  pm.sendRequest(requestStructure);",
+					"};",
+					"",
+					"const deleteArticleHelper = functionToString(deleteArticleRequest);",
+					"pm.collectionVariables.set('deleteArticle', deleteArticleHelper);",
+					"",
+					"function createCommentRequest(callback) {",
+					"  const BASE_URL = pm.collectionVariables.get('BASE_URL');",
+					"  const SLUG = pm.collectionVariables.get('slugConduit'); ",
+					"  const token = pm.collectionVariables.get('tokenConduit');",
+					"",
+					"  const url = `${BASE_URL}articles/${SLUG}/comments`;",
+					"",
+					"  const bodyText = pm.variables.replaceIn('{{$randomLoremSentence}}');",
+					"",
+					"  const requestStructure = {",
+					"    url,",
+					"    method: 'POST',",
+					"    header: {",
+					"      'Content-Type': 'application/json',",
+					"      'Authorization': `Token ${token}`,",
+					"    },",
+					"    body: {",
+					"      mode: 'raw',",
+					"      raw: JSON.stringify({",
+					"        comment: { body: bodyText }",
+					"      })",
+					"    }",
+					"  };",
+					"",
+					"  pm.sendRequest(requestStructure, (error, response) => {",
+					"    if (response && response.json().comment) {",
+					"      const comment = response.json().comment;",
+					"",
+					"      pm.collectionVariables.set('id', comment.id);",
+					"      pm.collectionVariables.set('commentBody', comment.body);",
+					"",
+					"      console.log('Created comment:', comment);",
+					"",
+					"      if (callback) callback();",
+					"    } else {",
+					"      console.log(\"Comment creation failed:\", error);",
+					"    }",
+					"  });",
+					"}",
+					"",
+					"pm.collectionVariables.set(\"createComment\", createCommentRequest.toString());",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "https://conduit.mate.academy/api/"
+		},
+		{
+			"key": "passwordConduit",
+			"value": "12345Qwert!"
+		},
+		{
+			"key": "createNewUser",
+			"value": "function registrationRequest(callback) {\n  const BASE_URL = pm.collectionVariables.get('BASE_URL');\n  const url = BASE_URL + '/users';\n  // Генеруємо дані\n  const username = pm.variables.replaceIn('{{$randomFirstName}}').toLowerCase();\n  const email = pm.variables.replaceIn('{{$randomEmail}}').toLowerCase();\n  const password = pm.collectionVariables.get('passwordConduit');\n  const requestStructure = {\n    url,\n    method: 'POST',\n    header: {\n      'Content-Type': 'application/json',\n    },\n    body: {\n      mode: 'raw',\n      raw: JSON.stringify({\n        user: { username, email, password }\n      })\n    }\n  };\n  pm.sendRequest(requestStructure, (error, response) => {\n    if (response && response.json().user) {\n      const user = response.json().user;\n      // ЗБЕРІГАЄМО ВСЕ \n      pm.collectionVariables.set('username', username);\n      pm.collectionVariables.set('email', email);\n      pm.collectionVariables.set('password', password);\n      pm.collectionVariables.set('tokenConduit', user.token);\n      console.log(\"Created user:\", user);\n      if (callback) {\n        callback()\n      }\n    } else {\n      console.log(\"User creation failed:\", error);\n    }\n  });\n}"
+		},
+		{
+			"key": "BASE_URL",
+			"value": "https://conduit.mate.academy/api"
+		},
+		{
+			"key": "tokenConduit",
+			"value": ""
+		},
+		{
+			"key": "email",
+			"value": "nyah61@yahoo.com"
+		},
+		{
+			"key": "password",
+			"value": "12345Qwert!"
+		},
+		{
+			"key": "createdUsername",
+			"value": "Jace61"
+		},
+		{
+			"key": "createdEmail",
+			"value": "Joy.Raynor50@yahoo.com"
+		},
+		{
+			"key": "createdPassword",
+			"value": "YmVyVp_0FBUVrab"
+		},
+		{
+			"key": "username",
+			"value": "adela"
+		},
+		{
+			"key": "assertStatusCodeAndResponseTime",
+			"value": "() => {\n  pm.test('Assert status code is 200', () => {\n    pm.response.to.have.status(200);\n  });\n\n  pm.test('Assert response time is less than 1000ms', () => {\n    pm.expect(pm.response.responseTime)\n      .to.be.below(1000);\n  });\n}"
+		},
+		{
+			"key": "assertStatus200_responseTime",
+			"value": "() => {\n  pm.test('Assert status code is 200', () => {\n    pm.response.to.have.status(200);\n  });\n\n  pm.test('Assert response time is less than 1000ms', () => {\n    pm.expect(pm.response.responseTime)\n      .to.be.below(1000);\n  });\n}"
+		},
+		{
+			"key": "assertStatus422_responseTime",
+			"value": "() => {\n  pm.test('Assert status code is 422', () => {\n    pm.response.to.have.status(422);\n  });\n\n  pm.test('Assert response time is less than 1000ms', () => {\n    pm.expect(pm.response.responseTime)\n      .to.be.below(1000);\n  });\n}"
+		},
+		{
+			"key": "deleteArticle",
+			"value": "function deleteArticleRequest() {\n  const BASE_URL = pm.collectionVariables.get('BASE_URL');\n  const SLUG = pm.collectionVariables.get('slugConduit');\n  const url = `${BASE_URL}articles/${SLUG}`;\n  const token = pm.collectionVariables.get('tokenConduit');;\n\n  const requestStructure = {\n    url, //\n    method: 'DELETE',\n    header: {\n      'Content-Type': 'application/json',\n      'Authorization': 'Token ' + token,\n    },\n    body: {}\n  };\n\n  pm.sendRequest(requestStructure);\n}"
+		},
+		{
+			"key": "articleBodyConduit",
+			"value": "Ut quia nobis sapiente ducimus provident consequatur ut itaque aut. Velit sed quas dolorem rem deleniti."
+		},
+		{
+			"key": "createArticle",
+			"value": "function createArticle() {\n  const BASE_URL = pm.collectionVariables.get('BASE_URL');\n  const url = BASE_URL + '/articles'\n  const title = pm.variables.replaceIn('{{$randomLoremSentence}}')\n  const description = pm.variables.replaceIn('{{$randomLoremSentence}}');\n  const body = pm.variables.replaceIn('{{$randomLoremSentences}}');\n  const tagList = ['talent'];\n  console.log(tagList)\n  const token = pm.collectionVariables.get('tokenConduit')\n\n  const requestStructure = {\n    url,\n    method: 'POST',\n    header: {\n      'Content-Type': 'application/json',\n      'Authorization': `Token ${token}`,\n    },\n    body: {\n      mode: 'raw',\n      raw: JSON.stringify({\n        article: { title, description, body, tagList }\n      })\n    }\n  };\n  pm.sendRequest(requestStructure, (error, response) => {\n    if (response && response.json().article) {\n      const article = response.json().article;\n      pm.collectionVariables.set('slugConduit', article.slug)\n      pm.collectionVariables.set('articleTitleConduit', article.title)\n      pm.collectionVariables.set('articleBodyConduit', article.body)\n      pm.collectionVariables.set('articleDescriptionConduit', article.description)\n      pm.collectionVariables.set('articleTagsConduit', article.tagList)\n      console.log('Created article:', article)\n\n    }\n    else {\n      console.log('Article creation failed:', error)\n    }\n  })\n\n}"
+		},
+		{
+			"key": "articleTitleConduit",
+			"value": "Culpa nesciunt maxime illum laboriosam repudiandae."
+		},
+		{
+			"key": "articleDescriptionConduit",
+			"value": "Numquam asperiores corporis ab quae odit ipsum nostrum."
+		},
+		{
+			"key": "articleTagsConduit",
+			"value": [
+				"talent"
+			]
+		},
+		{
+			"key": "bodyUpdated",
+			"value": "Accusantium est reiciendis ipsa cupiditate deserunt nihil qui quae. Voluptatem vero et aut nulla. Tempore qui ut aut. Vel nostrum autem sit dolores distinctio deserunt et. Quia est doloribus id reprehenderit aut quam aut quidem."
+		},
+		{
+			"key": "slugConduit",
+			"value": "culpa-nesciunt-maxime-illum-laboriosam-repudiandae-80330h"
+		},
+		{
+			"key": "createComment",
+			"value": "function createCommentRequest(callback) {\n  const BASE_URL = pm.collectionVariables.get('BASE_URL');\n  const SLUG = pm.collectionVariables.get('slugConduit'); \n  const token = pm.collectionVariables.get('tokenConduit');\n\n  const url = `${BASE_URL}articles/${SLUG}/comments`;\n\n  const bodyText = pm.variables.replaceIn('{{$randomLoremSentence}}');\n\n  const requestStructure = {\n    url,\n    method: 'POST',\n    header: {\n      'Content-Type': 'application/json',\n      'Authorization': `Token ${token}`,\n    },\n    body: {\n      mode: 'raw',\n      raw: JSON.stringify({\n        comment: { body: bodyText }\n      })\n    }\n  };\n\n  pm.sendRequest(requestStructure, (error, response) => {\n    if (response && response.json().comment) {\n      const comment = response.json().comment;\n\n      pm.collectionVariables.set('id', comment.id);\n      pm.collectionVariables.set('commentBody', comment.body);\n\n      console.log('Created comment:', comment);\n\n      if (callback) callback();\n    } else {\n      console.log(\"Comment creation failed:\", error);\n    }\n  });\n}"
+		},
+		{
+			"key": "commentId",
+			"value": 114935
+		},
+		{
+			"key": "commentBody",
+			"value": "Quia officia vel rerum."
+		},
+		{
+			"key": "id",
+			"value": 114942
+		}
+	]
+}

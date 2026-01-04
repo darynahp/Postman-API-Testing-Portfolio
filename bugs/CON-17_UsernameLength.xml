@@ -1,0 +1,109 @@
+<rss version="0.92">
+  <channel>
+    <title>Jira</title>
+    <link>https://darynahopanchuk-1764176161485.atlassian.net</link>
+    <description>This file is an XML representation of an issue</description>
+    <language>en-us</language>
+    <build-info>
+      <version>1001.0.0-SNAPSHOT</version>
+      <build-number>100290</build-number>
+      <build-date>20-12-2025</build-date>
+    </build-info>
+    <item>
+      <title>[CON-17] Username field accepts 41 characters instead of rejecting it.</title>
+      <link>https://darynahopanchuk-1764176161485.atlassian.net/browse/CON-17</link>
+      <project id="10000" key="CON">qanov25dhopanchuk</project>
+      <description>
+        <p>
+          <b>Test Data:</b>
+        </p>
+        <p>Username: Bxxqpl1znr3uayvkjfhgsoieprtnwqlxmvbczqktp</p>
+        <p>Email: <a href="mailto:test.user@example.com" class="external-link"
+            rel="nofollow noreferrer">test.user@example.com</a></p>
+        <p>Password: Qaz123</p>
+        <p>
+          <b>Steps to reproduce:</b>
+        </p>
+        <ol>
+          <li>Send <tt>POST /users</tt> request with the following body: <div class="code panel"
+              style="border-width: 1px;">
+              <div class="codeContent panelContent">
+                <pre class="code-none">{ "user": { "username": "Bxxqpl1znr33ayvkjfhgsoiepr4nwqlxmvbczqktp", "email": "test.user@example.com", "password": "Qaz123" } }</pre>
+              </div>
+            </div></li>
+          <li>Observe the response.</li>
+        </ol>
+        <p>
+          <b>Expected result:</b>
+        </p>
+        <p>API should return 422 Unprocessable Entity with validation error: "Username must be 2–40
+          characters."</p>
+        <p>
+          <b>Actual result:</b>
+        </p>
+        <p>API returns 200 OK. User is successfully created with an invalid username length.</p>
+        <p>
+          <a href="https://loom.com/i/2df5eb9c18854cc0b7a886952ff1b7b8" title="smart-card"
+            class="external-link" rel="nofollow noreferrer">
+            https://loom.com/i/2df5eb9c18854cc0b7a886952ff1b7b8</a>
+        </p>
+      </description>
+      <environment>
+        <p>Postman</p>
+        <p>API: POST /users</p>
+      </environment>
+      <key id="10626">CON-17</key>
+      <summary>Username field accepts 41 characters instead of rejecting it.</summary>
+      <type id="10038"
+        iconUrl="https://darynahopanchuk-1764176161485.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10303?size=medium">
+        Bug</type>
+      <priority id="3"
+        iconUrl="https://darynahopanchuk-1764176161485.atlassian.net/images/icons/priorities/medium_new.svg">
+        Medium</priority>
+      <status id="10000"
+        iconUrl="https://darynahopanchuk-1764176161485.atlassian.net/images/icons/statuses/generic.png"
+        description="">To Do</status>
+      <statusCategory id="2" key="new" colorName="blue-gray" />
+      <resolution id="-1">Unresolved</resolution>
+      <assignee accountid="712020:fe88c2d4-b83c-4a4d-9ed3-7e8df506f93c">Daryna Hopanchuk</assignee>
+      <reporter accountid="712020:fe88c2d4-b83c-4a4d-9ed3-7e8df506f93c">Daryna Hopanchuk</reporter>
+      <labels> </labels>
+      <created>Tue, 9 Dec 2025 19:58:31 +0100</created>
+      <updated>Sun, 4 Jan 2026 15:57:09 +0100</updated>
+      <due />
+      <votes>0</votes>
+      <watches>1</watches>
+      <issuelinks>
+        <issuelinktype id="10000">
+          <name>Blocks</name>
+          <outwardlinks description="blocks">
+            <issuelink>
+              <issuekey id="10593">CON-16</issuekey>
+            </issuelink>
+          </outwardlinks>
+        </issuelinktype>
+      </issuelinks>
+      <attachments> </attachments>
+      <subtasks> </subtasks>
+      <customfields>
+        <customfield id="customfield_10000"
+          key="com.atlassian.jira.plugins.jira-development-integration-plugin:devsummarycf">
+          <customfieldname>Development</customfieldname>
+          <customfieldvalues> </customfieldvalues>
+        </customfield>
+        <customfield id="customfield_10019" key="com.pyxis.greenhopper.jira:gh-lexo-rank">
+          <customfieldname>Rank</customfieldname>
+          <customfieldvalues>
+            <customfieldvalue>0|i000f3:</customfieldvalue>
+          </customfieldvalues>
+        </customfield>
+        <customfield id="customfield_10020" key="com.pyxis.greenhopper.jira:gh-sprint">
+          <customfieldname>Sprint</customfieldname>
+          <customfieldvalues>
+            <customfieldvalue id="2">SCRUM Sprint 0</customfieldvalue>
+          </customfieldvalues>
+        </customfield>
+      </customfields>
+    </item>
+  </channel>
+</rss>
